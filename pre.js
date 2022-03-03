@@ -1,1 +1,1 @@
-javascript:alert('はろーわーるど'); 
+alert('はろーわーるど'); 
