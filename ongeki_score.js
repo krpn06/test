@@ -103,7 +103,7 @@ function make_page_crawler(detail_crawler) {
                   difficult = "MASTER"
               }
           }
-          //console.log($('.music_label', element).text())
+          console.log($('.music_label', element).text())
           const id = $('input', element).val()
           const name = $('.music_label', element).text()
           const level = level_list[crawl_id].name
