@@ -1,1 +1,1 @@
-aleat('qa');
+alert('qa');
