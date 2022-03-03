@@ -30,16 +30,16 @@ var level_list = [
 ]
 
 function save_csv(data) {
-    let blob = new Blob([json2csv(data)], {type: 'text/csv'});
-    let url  = URL.createObjectURL(blob);
+  let blob = new Blob([json2csv(data)], {type: 'text/csv'});
+  let url  = URL.createObjectURL(blob);
 
-    let a = document.createElement("a");
+  let a = document.createElement("a");
 
-    a.href = url;
-    a.target = '_blank';
-    a.download = 'ongeki_score.csv';
+  a.href = url;
+  a.target = '_blank';
+  a.download = 'ongeki_score.csv';
 
-    a.click();
+  a.click();
 }
 
 function json2csv(json) {
@@ -55,167 +55,166 @@ function json2csv(json) {
 }
 
 function loadScript(src, callback) {
-    let done = false;
-    let head = document.getElementsByTagName('head')[0];
-    let script = document.createElement('script');
-    script.src = src;
-    head.appendChild(script);
-    // Attach handlers for all browsers
-    script.onload = script.onreadystatechange = function() {
-        if ( !done && (!this.readyState ||
-            this.readyState === "loaded" || this.readyState === "complete") ) {
-            done = true;
-            callback();
-            // Handle memory leak in IE
-            script.onload = script.onreadystatechange = null;
-            if ( head && script.parentNode ) {
-                head.removeChild( script );
-            }
-        }
-    };
+   let done = false;
+   let head = document.getElementsByTagName('head')[0];
+   let script = document.createElement('script');
+   script.src = src;
+   head.appendChild(script);
+   // Attach handlers for all browsers
+   script.onload = script.onreadystatechange = function() {
+       if ( !done && (!this.readyState ||
+               this.readyState === "loaded" || this.readyState === "complete") ) {
+           done = true;
+           callback();
+           // Handle memory leak in IE
+           script.onload = script.onreadystatechange = null;
+           if ( head && script.parentNode ) {
+               head.removeChild( script );
+           }
+       }
+   };
 }
 function make_page_crawler(detail_crawler) {
-    let crawl_id = 0
-    let get_recursion = function() {
-        $.ajax({
-            type:"GET",
-            //contentType: "text/html; charset=EUC-JP",
-            //url:"https://ongeki-net.com/ongeki-mobile/record/musicLevel/search/?level="+level_list[crawl_id].id,
-            url:"https://ongeki-net.com/ongeki-mobile/record/musicLevel/search/?level="+level_list[crawl_id].id,
-            dataType:"html"
-        }).done(response => {
-            let obj = $('.container3 form', response)
+  let crawl_id = 0
+  let get_recursion = function() {
+    $.ajax({
+      type:"GET",
+      //contentType: "text/html; charset=EUC-JP",
+      url:"https://ongeki-net.com/ongeki-mobile/record/musicLevel/search/?level="+level_list[crawl_id].id,
+      dataType:"html"
+    }).done(response => {
+      let obj = $('.container3 form', response)
 
-            obj.each((index,element) => {
-                let difficult;
-                if ($('img:nth-child(2)', element)[0].src.match(/basic/)) {
-                    difficult = "BASIC"
-                } else if ($('img:nth-child(2)', element)[0].src.match(/lunatic/)) {
-                    difficult = "LUNATIC"
-                } else {
-                    return // id蜿悶ｋ縺�縺代↑繧叡asic縺�縺代〒濶ｯ縺�
-                    if ($('img:nth-child(2)', element)[0].src.match(/advanced/)) {
-                        difficult = "ADVANCED"
-                    }
-                    if ($('img:nth-child(2)', element)[0].src.match(/expert/)) {
-                        difficult = "EXPERT"
-                    }
-                    if ($('img:nth-child(2)', element)[0].src.match(/master/)) {
-                        difficult = "MASTER"
-                    }
-                }
-                //console.log($('.music_label', element).text())
-                const id = $('input', element).val()
-                const name = $('.music_label', element).text()
-                const level = level_list[crawl_id].name
-                let data = {
-                    id: id,
-                    difficult:difficult,
-                    level:level,
-                    name:name,
-                }
-                //console.log(data)
-                crawler_list.push(data)
-            });
-            $("#disp_result_area").html("蜿門ｾ励Μ繧ｹ繝医�菴懈�荳ｭ<br>"+crawl_id+"繝壹�繧ｸ逶ｮ蜿門ｾ怜ｮ御ｺ�")
+        obj.each((index,element) => {
+          let difficult;
+          if ($('img:nth-child(2)', element)[0].src.match(/basic/)) {
+              difficult = "BASIC"
+          } else if ($('img:nth-child(2)', element)[0].src.match(/lunatic/)) {
+              difficult = "LUNATIC"
+          } else {
+              return // id取るだけならbasicだけで良い
+              if ($('img:nth-child(2)', element)[0].src.match(/advanced/)) {
+                  difficult = "ADVANCED"
+              }
+              if ($('img:nth-child(2)', element)[0].src.match(/expert/)) {
+                  difficult = "EXPERT"
+              }
+              if ($('img:nth-child(2)', element)[0].src.match(/master/)) {
+                  difficult = "MASTER"
+              }
+          }
+          //console.log($('.music_label', element).text())
+          const id = $('input', element).val()
+          const name = $('.music_label', element).text()
+          const level = level_list[crawl_id].name
+          let data = {
+              id: id,
+              difficult:difficult,
+              level:level,
+              name:name,
+          }
+          //console.log(data)
+          crawler_list.push(data)
+        });
+        $("#disp_result_area").html("取得リストの作成中<br>"+crawl_id+"ページ目取得完了")
 
-            crawl_id++
+        crawl_id++
 
-            if (crawl_id < level_list.length) {
-                //setTimeout(detail_crawler, wait, crawler_list)
-                setTimeout(get_recursion, wait)
-            } else {
-                setTimeout(detail_crawler, wait, crawler_list)
-            }
-        })
-    }
-    return get_recursion
+        if (crawl_id < level_list.length) {
+            //setTimeout(detail_crawler, wait, crawler_list)
+            setTimeout(get_recursion, wait)
+        } else {
+          setTimeout(detail_crawler, wait, crawler_list)
+      }
+    })
+  }
+  return get_recursion
 }
 
 function make_crawler() {
-    let crawl_id = 0
-    let score_csv_data = []
+  let crawl_id = 0
+  let score_csv_data = []
 
-    var difficult_single_get = (music_data, selector_id, response) => {
-        var block_obj = $('#'+selector_id, response)
-        if (block_obj.length == 0) {
-            return
-        }
-        var last_play = $(".music_label table tbody tr:first-child td:nth-child(2)", block_obj).text()
-        var play_count = $(".music_label table tbody tr:nth-child(2) td:nth-child(2)", block_obj).text()
-        var over_damage_high_score = $(".score_table  tbody tr:nth-child(2) td:nth-child(1)", block_obj).text()
-        var battle_high_score = $(".score_table  tbody tr:nth-child(2) td:nth-child(2)", block_obj).text().replace(/,/g,"")
-        var technical_high_score = $(".score_table  tbody tr:nth-child(2) td:nth-child(3)", block_obj).text().replace(/,/g,"")
+  var difficult_single_get = (music_data, selector_id, response) => {
+      var block_obj = $('#'+selector_id, response)
+      if (block_obj.length == 0) {
+          return
+      }
+      var last_play = $(".music_label table tbody tr:first-child td:nth-child(2)", block_obj).text()
+      var play_count = $(".music_label table tbody tr:nth-child(2) td:nth-child(2)", block_obj).text()
+      var over_damage_high_score = $(".score_table  tbody tr:nth-child(2) td:nth-child(1)", block_obj).text()
+      var battle_high_score = $(".score_table  tbody tr:nth-child(2) td:nth-child(2)", block_obj).text().replace(/,/g,"")
+      var technical_high_score = $(".score_table  tbody tr:nth-child(2) td:nth-child(3)", block_obj).text().replace(/,/g,"")
 
-        var clear_flag = 0
-        if ($(".music_score_icon_area img:nth-child(1)", block_obj)[0].src.match(/music_icon_br_/)) {
-            clear_flag = 1
-        }
+      var clear_flag = 0
+      if ($(".music_score_icon_area img:nth-child(1)", block_obj)[0].src.match(/music_icon_br_/)) {
+          clear_flag = 1
+      }
 
-        var bell_flag = 0
-        if ($(".music_score_icon_area img:nth-child(3)", block_obj)[0].src.match(/music_icon_fb.png/)) {
-            bell_flag = 1
-        }
+      var bell_flag = 0
+      if ($(".music_score_icon_area img:nth-child(3)", block_obj)[0].src.match(/music_icon_fb.png/)) {
+          bell_flag = 1
+      }
 
-        var ab_flag
-        if ($(".music_score_icon_area img:nth-child(4)", block_obj)[0].src.match(/music_icon_ab.png/)) {
-            ab_flag = "AB"
-        }
-        if ($(".music_score_icon_area img:nth-child(4)", block_obj)[0].src.match(/music_icon_fc.png/)) {
-            ab_flag = "FC"
-        }
+      var ab_flag
+      if ($(".music_score_icon_area img:nth-child(4)", block_obj)[0].src.match(/music_icon_ab.png/)) {
+          ab_flag = "AB"
+      }
+      if ($(".music_score_icon_area img:nth-child(4)", block_obj)[0].src.match(/music_icon_fc.png/)) {
+          ab_flag = "FC"
+      }
 
-        let data = {
-            music_id:music_data.id,
-            music_name:music_data.name,
-            difficulty:selector_id.toUpperCase(),
-            over_damage_high_score:over_damage_high_score,
-            battle_high_score:battle_high_score,
-            technical_high_score:technical_high_score,
-            play_count:play_count,
-            clear_flag:clear_flag,
-            bell_flag:bell_flag,
-            ab_flag:ab_flag,
-            last_play:last_play,
-        }
-        console.log(data)
-        score_csv_data.push(data)
-        $("#disp_result_area").html("music_id:"+music_data.id+"蜿門ｾ怜ｮ御ｺ�")
-        $("#disp_result_area").append(JSON.stringify(data)+"<br><br>");
-    }
-    let get_detail_data = (response, music_data) => {
-        difficult_single_get(music_data, "basic", response)
-        difficult_single_get(music_data, "advanced", response)
-        difficult_single_get(music_data, "expert", response)
-        difficult_single_get(music_data, "master", response)
-        difficult_single_get(music_data, "lunatic", response)
-    };
-    get_recursion = function(crawler_list) {
-        console.log(crawl_id)
-        $.ajax({
-            type:"GET",
-            url:"https://ongeki-net.com/ongeki-mobile/record/musicDetail",
-            data:{idx:crawler_list[crawl_id].id},
-            //contentType: "text/html; charset=EUC-JP",
-            dataType:"html"
-        }).done(response => {
-            get_detail_data(response,crawler_list[crawl_id])
-            crawl_id++
-            if (crawl_id < crawler_list.length) {
-                setTimeout(get_recursion, wait, crawler_list)
-                //save_csv(score_csv_data)
-            } else {
-                save_csv(score_csv_data)
-            }
-        })
-    }
-    return get_recursion
+      let data = {
+              music_id:music_data.id,
+              music_name:music_data.name,
+              difficulty:selector_id.toUpperCase(),
+              over_damage_high_score:over_damage_high_score,
+              battle_high_score:battle_high_score,
+              technical_high_score:technical_high_score,
+              play_count:play_count,
+              clear_flag:clear_flag,
+              bell_flag:bell_flag,
+              ab_flag:ab_flag,
+              last_play:last_play,
+      }
+      console.log(data)
+      score_csv_data.push(data)
+      $("#disp_result_area").html("music_id:"+music_data.id+"取得完了")
+      $("#disp_result_area").append(JSON.stringify(data)+"<br><br>");
+  }
+  let get_detail_data = (response, music_data) => {
+      difficult_single_get(music_data, "basic", response)
+      difficult_single_get(music_data, "advanced", response)
+      difficult_single_get(music_data, "expert", response)
+      difficult_single_get(music_data, "master", response)
+      difficult_single_get(music_data, "lunatic", response)
+   };
+  get_recursion = function(crawler_list) {
+    console.log(crawl_id)
+    $.ajax({
+      type:"GET",
+      url:"https://ongeki-net.com/ongeki-mobile/record/musicDetail",
+      data:{idx:crawler_list[crawl_id].id},
+      //contentType: "text/html; charset=EUC-JP",
+      dataType:"html"
+    }).done(response => {
+      get_detail_data(response,crawler_list[crawl_id])
+      crawl_id++
+      if (crawl_id < crawler_list.length) {
+        setTimeout(get_recursion, wait, crawler_list)
+        //save_csv(score_csv_data)
+      } else {
+        save_csv(score_csv_data)
+      }
+    })
+  }
+  return get_recursion
 }
 
 loadScript("https://code.jquery.com/jquery-3.2.1.min.js", function() {
-    $(".wrapper").append(result_area_html);
-    detail_crawler = make_crawler()
-    page_crawler = make_page_crawler(detail_crawler)
-    page_crawler()
+  $(".wrapper").append(result_area_html);
+  detail_crawler = make_crawler()
+  page_crawler = make_page_crawler(detail_crawler)
+  page_crawler()
 
 })
