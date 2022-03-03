@@ -113,7 +113,7 @@ function make_page_crawler(detail_crawler) {
               level:level,
               name:name,
           }
-          //console.log(data)
+          console.log(data)
           crawler_list.push(data)
         });
         $("#disp_result_area").html("取得リストの作成中<br>"+crawl_id+"ページ目取得完了")
