@@ -279,7 +279,7 @@ function make_crawler() {
                 "rows": ranking_json
             };
 
-            //save_json(SendDATA, "RankingData")
+            save_json(SendDATA, "RankingData")
 
             var postparam =
                 {
