@@ -14,7 +14,7 @@ var music_ranking_master = []
 var total_p_score_ranking = []
 var result_area_html = '<div style="background-color:rgb(255,255,255);border-radius:10px;margin: 30px;padding: 10px;"><div id="disp_result_area"></div></div>'
 
-const URL1 = "https://script.google.com/macros/s/AKfycbwkfB7ejnvCQNOAxjzSIkT5I28Hh-zt_kducgui9sVl_y9v36RgwP44G9YjGLCCub5J/exec";
+const URL1 = "https://script.google.com/macros/s/AKfycbwHboqErKHcLRvDY1Kxydka_d6HOkmceULVc-fPv-J4kWoXKaQwynu6Zg-IfKCFTs4S/exec";
 
 function save_csv(data) {
     let blob = new Blob([json2csv(data)], {type: 'text/csv'});
@@ -279,7 +279,7 @@ function make_crawler() {
                 "rows": ranking_json
             };
 
-            save_json(SendDATA, "RankingData")
+            //save_json(SendDATA, "RankingData")
 
             var postparam =
                 {
