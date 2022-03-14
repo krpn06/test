@@ -270,7 +270,7 @@ function make_crawler() {
 
             total_p_score_ranking.sort(compare);
 
-            $("#disp_result_area").html("Pスコ対戦更新完了！")
+            $("#disp_result_area").html("更新完了！")
 
             var SendDATA = {
                 "sheetName": "ランキングデータ" ,
