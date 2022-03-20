@@ -4,7 +4,7 @@ let master_num = 0
 let lunatic_num = 0
 let finish = 0
 let ptotal = 0
-var player = {name:"ＴＡＫＥＲＵＮ", s6:0, s5h:0, s5:0}
+var player = {name:"ＴＡＫＥＲＵＮ", ptotal:0, s6:0, s5h:0, s5:0}
 var master_pmax_json = []
 var lunatic_pmax_json = []
 var ranking_json = []
@@ -14,7 +14,7 @@ var music_ranking_master = []
 var total_p_score_ranking = []
 var result_area_html = '<div style="background-color:rgb(255,255,255);border-radius:10px;margin: 30px;padding: 10px;"><div id="disp_result_area"></div></div>'
 
-const URL1 = "https://script.google.com/macros/s/AKfycbzpfOtGORzkcGHOoMVz3SiNzudJBe_ZIIJofB6e4lT9p6CSHWorDhA98pgBFxdZ8iZB/exec";
+const URL1 = "https://script.google.com/macros/s/AKfycbxCdqXfBv3bWsLJSJs282vihBPjFbV9g4sVp-qJNd1zfN22WTBxfTJJZXHYICGDVi9x/exec";
 
 function save_csv(data) {
     let blob = new Blob([json2csv(data)], {type: 'text/csv'});
@@ -223,6 +223,7 @@ function make_crawler() {
             }
             // ランキングから曲名を削除
             num = 0
+            
             while (num < music_ranking_master.length) {
                 if (music_ranking_master[num].data) {
                     ptotal += music_ranking_master[num].pmax
