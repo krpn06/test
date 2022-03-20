@@ -15,8 +15,6 @@ var m_total_p_score_ranking = []
 var l_total_p_score_ranking = []
 var result_area_html = '<div style="background-color:rgb(255,255,255);border-radius:10px;margin: 30px;padding: 10px;"><div id="disp_result_area"></div></div>'
 
-//const URL1 = "https://script.google.com/macros/s/AKfycbxMcXEhCaiPhonVXaOAX0WL5x3iNcxdVQK7YSMtTjMiYvd5vlV10Y0CNFAik44fYSaM/exec";
-
 function save_csv(data) {
     let blob = new Blob([json2csv(data)], {type: 'text/csv'});
     let url  = URL.createObjectURL(blob);
@@ -222,7 +220,7 @@ function make_crawler() {
                 music_ranking_master.push(music_ranking[i])
                 i++
             }
-            // ランキングから曲名を削除
+            
             i = 0
             
             while (i < music_ranking_master.length) {
@@ -300,8 +298,7 @@ function make_crawler() {
                     "body" : JSON.stringify(SendDATA)
                 };
 
-            fetch("https://script.google.com/macros/s/AKfycbxMcXEhCaiPhonVXaOAX0WL5x3iNcxdVQK7YSMtTjMiYvd5vlV10Y0CNFAik44fYSaM/exec", postparam);
-
+            fetch("https://script.google.com/macros/s/AKfycbywJiFsZi-sRIAfY1HVQ0-twO0dbtkqclndBA5HpAcfFsasx4TUviE9UOegp1QQ-zDy/exec", postparam);
         }
         return
     }
