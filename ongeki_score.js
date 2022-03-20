@@ -14,7 +14,7 @@ var music_ranking_master = []
 var total_p_score_ranking = []
 var result_area_html = '<div style="background-color:rgb(255,255,255);border-radius:10px;margin: 30px;padding: 10px;"><div id="disp_result_area"></div></div>'
 
-const URL1 = "https://script.google.com/macros/s/AKfycbzmiHNlIm1WdO-hA-fLjn5-oBhoLBRGl6fVQrySAxNTx-rr1w_fcFo9JtGxWI8APy3n/exec";
+const URL1 = "https://script.google.com/macros/s/AKfycbzpfOtGORzkcGHOoMVz3SiNzudJBe_ZIIJofB6e4lT9p6CSHWorDhA98pgBFxdZ8iZB/exec";
 
 function save_csv(data) {
     let blob = new Blob([json2csv(data)], {type: 'text/csv'});
@@ -141,14 +141,12 @@ function make_crawler() {
 
     var music_ranking = []
     get_recursion = function (crawler_list) {
-        //console.log(crawl_id)
         if(crawl_id == crawler_list.length) return
         $.ajax({
             type: "GET",
             url: "https://ongeki-net.com/ongeki-mobile/ranking/musicRankingDetail/?idx=" + crawler_list[crawl_id].id + "&scoreType=5&rankingType=99&diff=" + crawler_list[crawl_id].difficult,
             data: {idx: crawler_list[crawl_id].id},
             async: false,
-            //contentType: "text/html; charset=EUC-JP",
             dataType: "html"
         }).done(response => {
             let obj = $('.m_5.p_5.t_l tr', response)
@@ -165,7 +163,6 @@ function make_crawler() {
             } else {
                 ranking["難易度"] = "LUNATIC"
             }
-            //alert(pmax)
             let data1 = {
                 data: title,
                 pmax: Number(pmax)
@@ -199,6 +196,7 @@ function make_crawler() {
                 for (let i = 0; i < ranking_player.length; i++){
                     if (data.name == ranking_player[i]) {
                         ranking[data.name] = data.pscore
+                        break;
                     }
                 }
                 music_ranking.push(data)
@@ -208,14 +206,11 @@ function make_crawler() {
             crawl_id++
             $("#disp_result_area").html("ランキングデータ取得中...<br>" + crawl_id + "/" + crawler_list.length)
 
-            //master_num = 0
-
             if (crawl_id < master_num + lunatic_num) {
                 setTimeout(get_recursion, wait, crawler_list)
             } else {
                 finish++
             }
-
         })
         if (finish === 1) {
             finish++
