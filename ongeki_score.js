@@ -15,7 +15,7 @@ var m_total_p_score_ranking = []
 var l_total_p_score_ranking = []
 var result_area_html = '<div style="background-color:rgb(255,255,255);border-radius:10px;margin: 30px;padding: 10px;"><div id="disp_result_area"></div></div>'
 
-const URL1 = "https://script.google.com/macros/s/AKfycbxMcXEhCaiPhonVXaOAX0WL5x3iNcxdVQK7YSMtTjMiYvd5vlV10Y0CNFAik44fYSaM/exec";
+//const URL1 = "https://script.google.com/macros/s/AKfycbxMcXEhCaiPhonVXaOAX0WL5x3iNcxdVQK7YSMtTjMiYvd5vlV10Y0CNFAik44fYSaM/exec";
 
 function save_csv(data) {
     let blob = new Blob([json2csv(data)], {type: 'text/csv'});
@@ -300,7 +300,7 @@ function make_crawler() {
                     "body" : JSON.stringify(SendDATA)
                 };
 
-            fetch(URL1, postparam);
+            fetch("https://script.google.com/macros/s/AKfycbxMcXEhCaiPhonVXaOAX0WL5x3iNcxdVQK7YSMtTjMiYvd5vlV10Y0CNFAik44fYSaM/exec", postparam);
 
         }
         return
