@@ -15,7 +15,7 @@ var m_total_p_score_ranking = []
 var l_total_p_score_ranking = []
 var result_area_html = '<div style="background-color:rgb(255,255,255);border-radius:10px;margin: 30px;padding: 10px;"><div id="disp_result_area"></div></div>'
 
-const URL1 = "https://script.google.com/macros/s/AKfycbxcxMYnq029DedA0kmCjdJPVojweRHsJO_oi544XiCfbf7v64-81rpZ2wkTq39Ajq0Y/exec";
+const URL1 = "https://script.google.com/macros/s/AKfycbz4ZdCX43ddQZrtrNdhkv4ocGbj2YOJvQeaoloyX6A-AyyGnZ4k_90NqdBSHgl_CAt7/exec";
 
 function save_csv(data) {
     let blob = new Blob([json2csv(data)], {type: 'text/csv'});
