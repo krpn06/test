@@ -3,7 +3,7 @@ const wait = 200
 let master_num = 0
 let lunatic_num = 0
 let finish = 0
-let ptotal = 0
+let m_ptotal = 0
 var player = {name:"ＴＡＫＥＲＵＮ", ptotal:0, s6:0, s5h:0, s5:0}
 var master_pmax_json = []
 var lunatic_pmax_json = []
@@ -11,10 +11,11 @@ var ranking_json = []
 var ranking_player = ["ＴＡＫＥＲＵＮ", "ＦＡＬＬ＊ＵＭＲ",/* "ｃａｓｇｅＣ☆Ｍ", "ＫＯＧＡＣＨＡＩ", "Ｆ．Ａ"*/]
 var crawler_list = []
 var music_ranking_master = []
-var total_p_score_ranking = []
+var m_total_p_score_ranking = []
+var l_total_p_score_ranking = []
 var result_area_html = '<div style="background-color:rgb(255,255,255);border-radius:10px;margin: 30px;padding: 10px;"><div id="disp_result_area"></div></div>'
 
-const URL1 = "https://script.google.com/macros/s/AKfycbxCdqXfBv3bWsLJSJs282vihBPjFbV9g4sVp-qJNd1zfN22WTBxfTJJZXHYICGDVi9x/exec";
+const URL1 = "https://script.google.com/macros/s/AKfycbyyDM2SwNUUGQ0byJc45kSUc4h7n15AuL-LFTBSKegXHWBLkP_DutR2IgNiQoVwsXMf/exec";
 
 function save_csv(data) {
     let blob = new Blob([json2csv(data)], {type: 'text/csv'});
@@ -165,6 +166,7 @@ function make_crawler() {
             }
             let data1 = {
                 data: title,
+                difficult: ranking["難易度"],
                 pmax: Number(pmax)
             }
             music_ranking.push(data1)
@@ -182,13 +184,12 @@ function make_crawler() {
                 let data = {
                     name: player_name,
                     pscore: platinum_score,
-                    pmax: Number(pmax)
                 }
 
                 if(index == 0) {
                     ranking["TOP"] = data.pscore
                     ranking["PLAYER"] = data.name
-                    ranking["P-MAX"] = data.pmax
+                    ranking["P-MAX"] = Number(pmax)
                     for(let i = 0; i < ranking_player.length; i++) {
                         ranking[ranking_player[i]] = 0
                     }
@@ -215,48 +216,58 @@ function make_crawler() {
         if (finish === 1) {
             finish++
 
-            let num = 0;
+            let i = 0;
 
-            while (num < music_ranking.length) {
-                music_ranking_master.push(music_ranking[num])
-                num++
+            while (i < music_ranking.length) {
+                music_ranking_master.push(music_ranking[i])
+                i++
             }
             // ランキングから曲名を削除
-            num = 0
+            i = 0
             
-            while (num < music_ranking_master.length) {
-                if (music_ranking_master[num].data) {
-                    ptotal += music_ranking_master[num].pmax
+            while (i < music_ranking_master.length) {
+                if (music_ranking_master[i].data && music_ranking_master[i].difficult == "MASTER") {
+                    m_ptotal += music_ranking_master[i].pmax
                 }
-                num++
+                i++
             }
 
-            for (let i = 0; i < music_ranking_master.length; i++) {
+            //紫PTHSランキング生成
+            let duplicate_check = []
+            for (i = 0; i < music_ranking_master.length; i++) {
+                if (music_ranking_master[i].data && music_ranking_master[i].difficult == "LUNATIC") break;
                 if (music_ranking_master[i].data) {
+                    duplicate_check = []
                     continue;
                 }
-                for (let j = 0; j < total_p_score_ranking.length; j++) {
-                    if (music_ranking_master[i].name === total_p_score_ranking[j].name) {
-                        total_p_score_ranking[j].pscore += music_ranking_master[i].pscore
-                        if (music_ranking_master[i].name === "ＴＡＫＥＲＵＮ") {
-                            let p = music_ranking_master[i].pscore / music_ranking_master[i].pmax
-                            if(p >= 0.99){
-                                player.s6++
-                                player.s5h++
-                                player.s5++
-                            } else if (p >= 0.98) {
-                                player.s5h++
-                                player.s5++
-                            } else if (p >= 0.97) {
-                                player.s5++
-                            }
-                        }
-                        break;
-                    }
+                if (duplicate_check.includes(music_ranking_master[i].name)) {
+                    continue;
                 }
-                total_p_score_ranking.push(music_ranking_master[i])
+                duplicate_check.push(music_ranking_master[i].name)
+                let index = m_total_p_score_ranking.findIndex(element => element.name === music_ranking_master[i].name)
+                if (index !== -1) {
+                    m_total_p_score_ranking[index].pscore += music_ranking_master[i].pscore
+                } else {
+                    m_total_p_score_ranking.push(music_ranking_master[i])
+                }
             }
-
+            
+            for (; i < music_ranking_master.length; i++) {
+                if (music_ranking_master[i].data) {
+                    duplicate_check = []
+                    continue;
+                }
+                if (duplicate_check.includes(music_ranking_master[i].name)) {
+                    continue;
+                }
+                duplicate_check.push(music_ranking_master[i].name)
+                let index = l_total_p_score_ranking.findIndex(element => element.name === music_ranking_master[i].name)
+                if (index !== -1) {
+                    l_total_p_score_ranking[index].pscore += music_ranking_master[i].pscore
+                } else {
+                    l_total_p_score_ranking.push(music_ranking_master[i])
+                }
+            }
             function compare(a, b) {
                 const numA = a.pscore;
                 const numB = b.pscore;
@@ -264,18 +275,22 @@ function make_crawler() {
                 return (numA - numB) * -1;
             }
 
-            total_p_score_ranking.sort(compare);
+            m_total_p_score_ranking.sort(compare);
+            l_total_p_score_ranking.sort(compare);
 
             $("#disp_result_area").html("更新完了！")
 
             var SendDATA = {
                 "sheetName": "ランキングデータ" ,
+                "m_pscore_ranking": m_total_p_score_ranking,
+                "l_pscore_ranking": l_total_p_score_ranking,
                 "music_num": master_num + lunatic_num,
+                "m_ptotal": m_ptotal,
                 "player": ranking_player,
                 "rows": ranking_json
             };
 
-            //save_json(SendDATA, "RankingData")
+            save_json(SendDATA, "RankingData")
 
             var postparam =
                 {
