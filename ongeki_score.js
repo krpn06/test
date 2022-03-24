@@ -1,4 +1,4 @@
-const wait = 1000
+const wait = 200
 
 let master_num = 0
 let lunatic_num = 0
@@ -8,11 +8,12 @@ var player = {name:"ＴＡＫＥＲＵＮ", ptotal:0, s6:0, s5h:0, s5:0}
 var master_pmax_json = []
 var lunatic_pmax_json = []
 var ranking_json = []
-var ranking_player = ["ＴＡＫＥＲＵＮ", "ＦＡＬＬ＊ＵＭＲ",/* "ｃａｓｇｅＣ☆Ｍ", "ＫＯＧＡＣＨＡＩ", "Ｆ．Ａ"*/]
+var ranking_player = ["ＴＡＫＥＲＵＮ", "ＦＡＬＬ＊ＵＭＲ", "ｃａｓｇｅＣ☆Ｍ", "ＫＯＧＡＣＨＡＩ", "Ｆ．Ａ", "ＴＳＵＢＡＫＩ．", "Ｋ　Ｒ　θ　Ｒ．"]
 var crawler_list = []
 var music_ranking_master = []
 var m_total_p_score_ranking = []
 var l_total_p_score_ranking = []
+var s6_ranking = []
 var result_area_html = '<div style="background-color:rgb(255,255,255);border-radius:10px;margin: 30px;padding: 10px;"><div id="disp_result_area"></div></div>'
 
 function save_csv(data) {
@@ -231,10 +232,12 @@ function make_crawler() {
             }
 
             //紫PTHSランキング生成
+            let song_num = 0
             let duplicate_check = []
             for (i = 0; i < music_ranking_master.length; i++) {
-                if (music_ranking_master[i].data && music_ranking_master[i].difficult == "LUNATIC") break;
+                if (music_ranking_master[i].data == "STARTLINER -星咲 あかりソロver.-") break;
                 if (music_ranking_master[i].data) {
+                    song_num++
                     duplicate_check = []
                     continue;
                 }
@@ -245,9 +248,16 @@ function make_crawler() {
                 let index = m_total_p_score_ranking.findIndex(element => element.name === music_ranking_master[i].name)
                 if (index !== -1) {
                     m_total_p_score_ranking[index].pscore += music_ranking_master[i].pscore
+                    if(music_ranking_master[i].pscore / master_pmax_json[song_num - 1].pmax >= 0.990) s6_ranking[index].s6++;
                 } else {
                     m_total_p_score_ranking.push(music_ranking_master[i])
+                    s6_ranking.push({name: music_ranking_master[i].name, s6: 0})
                 }
+            }
+            
+            while(i < music_ranking_master.length) {
+                if (music_ranking_master[i].data && music_ranking_master[i].difficult == "LUNATIC") break;
+                i++;
             }
             
             for (; i < music_ranking_master.length; i++) {
@@ -272,9 +282,17 @@ function make_crawler() {
 
                 return (numA - numB) * -1;
             }
+            
+            function compare_s6(a, b) {
+                const numA = a.s6;
+                const numB = b.s6;
+
+                return (numA - numB) * -1;
+            }
 
             m_total_p_score_ranking.sort(compare);
             l_total_p_score_ranking.sort(compare);
+            s6_ranking.sort(compare_s6);
 
             $("#disp_result_area").html("更新完了！")
 
@@ -282,13 +300,14 @@ function make_crawler() {
                 "sheetName": "ランキングデータ" ,
                 "m_pscore_ranking": m_total_p_score_ranking,
                 "l_pscore_ranking": l_total_p_score_ranking,
+                "s6_ranking": s6_ranking,
                 "music_num": master_num + lunatic_num,
                 "m_ptotal": m_ptotal,
                 "player": ranking_player,
                 "rows": ranking_json
             };
 
-            //save_json(SendDATA, "RankingData")
+            save_json(SendDATA, "RankingData")
 
             var postparam =
                 {
@@ -298,7 +317,7 @@ function make_crawler() {
                     "body" : JSON.stringify(SendDATA)
                 };
 
-            fetch("https://script.google.com/macros/s/AKfycbywJiFsZi-sRIAfY1HVQ0-twO0dbtkqclndBA5HpAcfFsasx4TUviE9UOegp1QQ-zDy/exec", postparam);
+            fetch("https://script.google.com/macros/s/AKfycbxzXIQebXJ-TyTrXOXr9smyS11eaYRdWQR2AjS-37GgvvEPzNFwHL8W2It_4xMxGViq/exec", postparam);
         }
         return
     }
