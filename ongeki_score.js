@@ -1,4 +1,4 @@
-const wait = 200
+const wait = 1000
 
 let master_num = 0
 let lunatic_num = 0
