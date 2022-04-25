@@ -8,7 +8,7 @@ var player = {name:"ＴＡＫＥＲＵＮ", ptotal:0, s6:0, s5h:0, s5:0}
 var master_pmax_json = []
 var lunatic_pmax_json = []
 var ranking_json = []
-var ranking_player = ["ＴＡＫＥＲＵＮ", "ＦＡＬＬ＊ＵＭＲ", "ｃａｓｇｅＣ☆Ｍ", "ＫＯＧＡＣＨＡＩ", "Ｆ．Ａ", "ＴＳＵＢＡＫＩ．", "Ｋ　Ｒ　θ　Ｒ．"]
+var ranking_player = ["ＴＡＫＥＲＵＮ", "ＦＡＬＬ＊ＵＭＲ", "ＫＯＧＡＣＨＡＩ", "Ｆ．Ａ", "Ｋ　Ｒ　θ　Ｒ．"]
 var crawler_list = []
 var music_ranking_master = []
 var m_total_p_score_ranking = []
@@ -236,7 +236,9 @@ function make_crawler() {
             let duplicate_check = []
             for (i = 0; i < music_ranking_master.length; i++) {
                 if (music_ranking_master[i].data == "STARTLINER -星咲 あかりソロver.-") break;
+
                 if (music_ranking_master[i].data) {
+                    m_ptotal += music_ranking_master[i].pmax
                     song_num++
                     duplicate_check = []
                     continue;
