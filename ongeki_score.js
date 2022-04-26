@@ -1,9 +1,10 @@
-const wait = 200
+const wait = 1000
 
 let master_num = 0
 let lunatic_num = 0
 let finish = 0
 let m_ptotal = 0
+let master_medal_flag = 1
 var player = {name:"ＴＡＫＥＲＵＮ", ptotal:0, s6:0, s5h:0, s5:0}
 var master_pmax_json = []
 var lunatic_pmax_json = []
@@ -164,6 +165,9 @@ function make_crawler() {
             } else {
                 ranking["難易度"] = "LUNATIC"
             }
+            
+            if(title == "STARTLINER -星咲 あかりソロver.-" || title == "STARTLINER -藤沢 柚子ソロver.-") master_medal_flag = 0
+            
             let data1 = {
                 data: title,
                 difficult: ranking["難易度"],
@@ -190,14 +194,18 @@ function make_crawler() {
                     ranking["TOP"] = data.pscore
                     ranking["PLAYER"] = data.name
                     ranking["P-MAX"] = Number(pmax)
-                    player_top_num[data.name] = (player_top_num[data.name] || 0) + 1;
+                    if(master_medal_flag) {
+                        player_top_num[data.name] = (player_top_num[data.name] || 0) + 1;
+                    }
                     for(let i = 0; i < ranking_player.length; i++) {
                         ranking[ranking_player[i]] = 0
                     }
                 }
                 
                 if(index > 0 && data.pscore == ranking["TOP"]){
-                    player_top_num[data.name] = (player_top_num[data.name] || 0) + 1;
+                    if(master_medal_flag) {
+                        player_top_num[data.name] = (player_top_num[data.name] || 0) + 1;
+                    }
                 }
                 
                 for (let i = 0; i < ranking_player.length; i++){
