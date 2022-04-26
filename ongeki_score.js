@@ -1,4 +1,4 @@
-const wait = 1000
+const wait = 200
 
 let master_num = 0
 let lunatic_num = 0
@@ -8,9 +8,10 @@ var player = {name:"ＴＡＫＥＲＵＮ", ptotal:0, s6:0, s5h:0, s5:0}
 var master_pmax_json = []
 var lunatic_pmax_json = []
 var ranking_json = []
-var ranking_player = ["ＴＡＫＥＲＵＮ", "ＦＡＬＬ＊ＵＭＲ", "ＫＯＧＡＣＨＡＩ", "Ｆ．Ａ", "Ｋ　Ｒ　θ　Ｒ．"]
+var ranking_player = ["ＴＡＫＥＲＵＮ", "ＦＡＬＬ＊ＵＭＲ", "ＫＯＧＡＣＨＡＩ", "Ｆ．Ａ", "Ｋ　Ｒ　θ　Ｒ．", "ＴｅＫ４"]
 var crawler_list = []
 var music_ranking_master = []
+var player_top_num = {}
 var m_total_p_score_ranking = []
 var l_total_p_score_ranking = []
 var s6_ranking = []
@@ -189,10 +190,16 @@ function make_crawler() {
                     ranking["TOP"] = data.pscore
                     ranking["PLAYER"] = data.name
                     ranking["P-MAX"] = Number(pmax)
+                    player_top_num[data.name] = (player_top_num[data.name] || 0) + 1;
                     for(let i = 0; i < ranking_player.length; i++) {
                         ranking[ranking_player[i]] = 0
                     }
                 }
+                
+                if(index > 0 && data.pscore == ranking["TOP"]){
+                    player_top_num[data.name] = (player_top_num[data.name] || 0) + 1;
+                }
+                
                 for (let i = 0; i < ranking_player.length; i++){
                     if (data.name == ranking_player[i]) {
                         ranking[data.name] = data.pscore
@@ -292,6 +299,10 @@ function make_crawler() {
                 return (numA - numB) * -1;
             }
 
+            var top_ranking = []
+            top_ranking = Object.entries(player_top_num).map(([name, pscore]) => ({name, pscore}))
+            
+            top_ranking.sort(compare);
             m_total_p_score_ranking.sort(compare);
             l_total_p_score_ranking.sort(compare);
             s6_ranking.sort(compare_s6);
@@ -300,6 +311,7 @@ function make_crawler() {
 
             var SendDATA = {
                 "sheetName": "ランキングデータ" ,
+                "player_top_num": top_ranking,
                 "m_pscore_ranking": m_total_p_score_ranking,
                 "l_pscore_ranking": l_total_p_score_ranking,
                 "s6_ranking": s6_ranking,
