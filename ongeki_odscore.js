@@ -146,7 +146,7 @@ function make_crawler() {
         if(crawl_id == crawler_list.length) return
         $.ajax({
             type: "GET",
-            url: "https://ongeki-net.com/ongeki-mobile/ranking/musicRankingDetail/?idx=" + crawler_list[crawl_id].id + "&scoreType=5&rankingType=99&diff=" + crawler_list[crawl_id].difficult,
+            url: "https://ongeki-net.com/ongeki-mobile/ranking/musicRankingDetail/?idx=" + crawler_list[crawl_id].id + "&scoreType=3&rankingType=99&diff=" + crawler_list[crawl_id].difficult,
             data: {idx: crawler_list[crawl_id].id},
             async: false,
             dataType: "html"
@@ -155,7 +155,7 @@ function make_crawler() {
             let title = $('.music_label.p_5.break', response).text()
             let level = $('.score_level.t_c', response).text()
             let genre = $('.t_r.f_12.main_color', response).text()
-            let pmax = $('.t_r.p_5.f_18.f_b', response).text().replace(/.*\//, '').replace(/[^0-9]/g, '')
+            let pmax = 1000
             let ranking = {}
             ranking["曲名"] = title
             ranking["レベル"] = level
@@ -184,7 +184,7 @@ function make_crawler() {
                 let player_name;
                 let platinum_score;
                 player_name = $('.t_l', element).text()
-                platinum_score = Number($('.f_18', element).text().replace(/,/, ''))
+                platinum_score = Number($('.f_18', element).text().replace(/%/, ''))
                 let data = {
                     name: player_name,
                     pscore: platinum_score,
