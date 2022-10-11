@@ -167,7 +167,8 @@ function make_crawler() {
                 ranking["難易度"] = "LUNATIC"
             }
             
-            if(title == "STARTLINER -星咲 あかりソロver.-" || title == "STARTLINER -藤沢 柚子ソロver.-") master_medal_flag = 0
+            if(title == "STARTLINER -星咲 あかりソロver.-" || title == "STARTLINER -藤沢 柚子ソロver.-") 
+                = 0
             
             let data1 = {
                 data: title,
@@ -194,7 +195,8 @@ function make_crawler() {
                 if(index == 0) {
                     ranking["TOP"] = data.pscore
                     ranking["PLAYER"] = data.name
-                    ranking["P-MAX"] = Number(pmax)
+                    ranking["TOPNUM"] = 1
+//                    ranking["P-MAX"] = Number(pmax)
                     if(master_medal_flag) {
                         player_top_num[data.name] = (player_top_num[data.name] || 0) + 1;
                     }
@@ -207,6 +209,7 @@ function make_crawler() {
                     if(master_medal_flag) {
                         player_top_num[data.name] = (player_top_num[data.name] || 0) + 1;
                     }
+                    ranking["TOPNUM"]++
                 }
                 
                 for (let i = 0; i < ranking_player.length; i++){
