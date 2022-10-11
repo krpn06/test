@@ -9,7 +9,7 @@ var player = {name:"ＦＡＬＬ＊ＵＭＲ", ptotal:0, s6:0, s5h:0, s5:0}
 var master_pmax_json = []
 var lunatic_pmax_json = []
 var ranking_json = []
-var ranking_player = ["ＴＡＫＥＲＵＮ", "ＦＡＬＬ＊ＵＭＲ", "Ｃ＊Ｌｕａ"]
+var ranking_player = ["ＴＡＫＥＲＵＮ", "ＦＡＬＬ＊ＵＭＲ", "Ｃ＊Ｌｕａ", "ＬＡＶ１Ｓ．"]
 var crawler_list = []
 var music_ranking_master = []
 var player_top_num = {}
@@ -166,9 +166,6 @@ function make_crawler() {
             } else {
                 ranking["難易度"] = "LUNATIC"
             }
-            
-            if(title == "STARTLINER -星咲 あかりソロver.-" || title == "STARTLINER -藤沢 柚子ソロver.-") 
-                = 0
             
             let data1 = {
                 data: title,
