@@ -265,7 +265,6 @@ function make_crawler() {
                 let index = total_p_score_ranking.findIndex(element => element.name === music_ranking_master[i].name)
                 if (index !== -1) {
                     total_p_score_ranking[index].pscore += music_ranking_master[i].pscore
-                    if(music_ranking_master[i].pscore / master_pmax_json[song_num - 1].pmax >= 0.990) s6_ranking[index].s6++;
                 } else {
                     total_p_score_ranking.push(music_ranking_master[i])
                     s6_ranking.push({name: music_ranking_master[i].name, s6: 0})
@@ -338,7 +337,7 @@ function make_crawler() {
                     "body" : JSON.stringify(SendDATA)
                 };
 
-            //fetch("https://script.google.com/macros/s/AKfycbwLIcvbHRI1J1YoGbtX-CWHr3YJh9Gw8HCBpFS88uHlJlzogjqMTW1NnKcfyk4Cerid/exec", postparam);
+            fetch("https://script.google.com/macros/s/AKfycbwLIcvbHRI1J1YoGbtX-CWHr3YJh9Gw8HCBpFS88uHlJlzogjqMTW1NnKcfyk4Cerid/exec", postparam);
         }
         return
     }
