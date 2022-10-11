@@ -15,6 +15,7 @@ var music_ranking_master = []
 var player_top_num = {}
 var m_total_p_score_ranking = []
 var l_total_p_score_ranking = []
+var total_p_score_ranking = []
 var s6_ranking = []
 var result_area_html = '<div style="background-color:rgb(255,255,255);border-radius:10px;margin: 30px;padding: 10px;"><div id="disp_result_area"></div></div>'
 
@@ -250,7 +251,6 @@ function make_crawler() {
             let song_num = 0
             let duplicate_check = []
             for (i = 0; i < music_ranking_master.length; i++) {
-                if (music_ranking_master[i].data == "STARTLINER -星咲 あかりソロver.-") break;
 
                 if (music_ranking_master[i].data) {
                     m_ptotal += music_ranking_master[i].pmax
@@ -262,12 +262,12 @@ function make_crawler() {
                     continue;
                 }
                 duplicate_check.push(music_ranking_master[i].name)
-                let index = m_total_p_score_ranking.findIndex(element => element.name === music_ranking_master[i].name)
+                let index = total_p_score_ranking.findIndex(element => element.name === music_ranking_master[i].name)
                 if (index !== -1) {
-                    m_total_p_score_ranking[index].pscore += music_ranking_master[i].pscore
+                    total_p_score_ranking[index].pscore += music_ranking_master[i].pscore
                     if(music_ranking_master[i].pscore / master_pmax_json[song_num - 1].pmax >= 0.990) s6_ranking[index].s6++;
                 } else {
-                    m_total_p_score_ranking.push(music_ranking_master[i])
+                    total_p_score_ranking.push(music_ranking_master[i])
                     s6_ranking.push({name: music_ranking_master[i].name, s6: 0})
                 }
             }
@@ -286,12 +286,15 @@ function make_crawler() {
                     continue;
                 }
                 duplicate_check.push(music_ranking_master[i].name)
-                let index = l_total_p_score_ranking.findIndex(element => element.name === music_ranking_master[i].name)
+                let index = total_p_score_ranking.findIndex(element => element.name === music_ranking_master[i].name)
                 if (index !== -1) {
-                    l_total_p_score_ranking[index].pscore += music_ranking_master[i].pscore
+                    total_p_score_ranking[index].pscore += music_ranking_master[i].pscore
                 } else {
-                    l_total_p_score_ranking.push(music_ranking_master[i])
+                    total_p_score_ranking.push(music_ranking_master[i])
                 }
+            }
+            
+                
             }
             function compare(a, b) {
                 const numA = a.pscore;
@@ -311,17 +314,15 @@ function make_crawler() {
             top_ranking = Object.entries(player_top_num).map(([name, pscore]) => ({name, pscore}))
             
             top_ranking.sort(compare);
-            m_total_p_score_ranking.sort(compare);
-            l_total_p_score_ranking.sort(compare);
+            total_p_score_ranking.sort(compare);
             s6_ranking.sort(compare_s6);
 
             $("#disp_result_area").html("更新完了！")
 
             var SendDATA = {
-                "sheetName": "ランキングデータ" ,
+                "sheetName": "ODランキングデータ" ,
                 "player_top_num": top_ranking,
-                "m_pscore_ranking": m_total_p_score_ranking,
-                "l_pscore_ranking": l_total_p_score_ranking,
+                "pscore_ranking": total_p_score_ranking,
                 "music_num": master_num + lunatic_num,
                 "m_ptotal": m_ptotal,
                 "player": ranking_player,
