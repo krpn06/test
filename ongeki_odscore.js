@@ -1,15 +1,15 @@
-const wait = 1000
+const wait = 200
 
 let master_num = 0
 let lunatic_num = 0
 let finish = 0
 let m_ptotal = 0
 let master_medal_flag = 1
-var player = {name:"ＴＡＫＥＲＵＮ", ptotal:0, s6:0, s5h:0, s5:0}
+var player = {name:"ＦＡＬＬ＊ＵＭＲ", ptotal:0, s6:0, s5h:0, s5:0}
 var master_pmax_json = []
 var lunatic_pmax_json = []
 var ranking_json = []
-var ranking_player = ["ＴＡＫＥＲＵＮ", "ＦＡＬＬ＊ＵＭＲ", "ＫＯＧＡＣＨＡＩ", "Ｆ．Ａ", "Ｋ　Ｒ　θ　Ｒ．", "ＴｅＫ４"]
+var ranking_player = ["ＴＡＫＥＲＵＮ", "ＦＡＬＬ＊ＵＭＲ", "Ｃ＊Ｌｕａ"]
 var crawler_list = []
 var music_ranking_master = []
 var player_top_num = {}
@@ -322,7 +322,6 @@ function make_crawler() {
                 "player_top_num": top_ranking,
                 "m_pscore_ranking": m_total_p_score_ranking,
                 "l_pscore_ranking": l_total_p_score_ranking,
-                "s6_ranking": s6_ranking,
                 "music_num": master_num + lunatic_num,
                 "m_ptotal": m_ptotal,
                 "player": ranking_player,
