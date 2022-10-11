@@ -295,7 +295,6 @@ function make_crawler() {
             }
             
                 
-            }
             function compare(a, b) {
                 const numA = a.pscore;
                 const numB = b.pscore;
